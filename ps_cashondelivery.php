@@ -180,7 +180,7 @@ class Ps_Cashondelivery extends PaymentModule
                 'tw' => '等待貨到付款驗證',
                 'ko' => '배송시 현금 지불 확인 대기',
             ],
-            true === (bool) version_compare(_PS_VERSION_, '1.7.7.0', '>=') ? '#4169E1' : '#34219E'
+            true === version_compare(_PS_VERSION_, '1.7.7.0', '>=') ? '#4169E1' : '#34219E'
         );
     }
 
