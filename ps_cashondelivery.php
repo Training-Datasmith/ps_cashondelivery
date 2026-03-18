@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,12 +31,12 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 class Ps_Cashondelivery extends PaymentModule
 {
-    const HOOKS = [
+    public const HOOKS = [
         'displayOrderConfirmation',
         'paymentOptions',
     ];
 
-    const CONFIG_OS_CASH_ON_DELIVERY = 'PS_OS_COD_VALIDATION';
+    public const CONFIG_OS_CASH_ON_DELIVERY = 'PS_OS_COD_VALIDATION';
 
     /**
      * {@inheritdoc}
