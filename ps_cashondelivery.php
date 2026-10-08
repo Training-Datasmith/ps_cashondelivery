@@ -100,8 +100,13 @@ class Ps_Cashondelivery extends PaymentModule
      */
     public function hookDisplayOrderConfirmation(array $params)
     {
-        /** @var Order $order */
-        $order = (isset($params['objOrder'])) ? $params['objOrder'] : $params['order'];
+        if (isset($params['objOrder'])) {
+            $order = $params['objOrder'];
+        } elseif (isset($params['order'])) {
+            $order = $params['order'];
+        } else {
+            return '';
+        }
 
         if (!Validate::isLoadedObject($order) || $order->module !== $this->name) {
             return '';
@@ -109,7 +114,7 @@ class Ps_Cashondelivery extends PaymentModule
 
         $this->context->smarty->assign([
             'shop_name' => $this->context->shop->name,
-            'total' => $this->context->getCurrentLocale()->formatPrice($params['order']->getOrdersTotalPaid(), (new Currency($params['order']->id_currency))->iso_code),
+            'total' => $this->context->getCurrentLocale()->formatPrice($order->getOrdersTotalPaid(), (new Currency($order->id_currency))->iso_code),
             'reference' => $order->reference,
             'contact_url' => $this->context->link->getPageLink('contact', true),
         ]);
@@ -224,13 +229,12 @@ class Ps_Cashondelivery extends PaymentModule
     ) {
         $tabNameByLangId = [];
 
-        foreach ($nameByLangIsoCode as $langIsoCode => $name) {
-            foreach (Language::getLanguages(false) as $language) {
-                if (Tools::strtolower($language['iso_code']) === $langIsoCode) {
-                    $tabNameByLangId[(int) $language['id_lang']] = $name;
-                } elseif (isset($nameByLangIsoCode['en'])) {
-                    $tabNameByLangId[(int) $language['id_lang']] = $nameByLangIsoCode['en'];
-                }
+        foreach (Language::getLanguages(false) as $language) {
+            $langIsoCode = Tools::strtolower($language['iso_code']);
+            if (isset($nameByLangIsoCode[$langIsoCode])) {
+                $tabNameByLangId[(int) $language['id_lang']] = $nameByLangIsoCode[$langIsoCode];
+            } elseif (isset($nameByLangIsoCode['en'])) {
+                $tabNameByLangId[(int) $language['id_lang']] = $nameByLangIsoCode['en'];
             }
         }
 

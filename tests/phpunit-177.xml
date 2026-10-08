@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap-177.php"
+         colors="true"
+         backupGlobals="false">
+    <testsuites>
+        <testsuite name="ps_cashondelivery-177">
+            <file>Unit/ModuleMetadataTest.php</file>
+            <file>Unit/HookPaymentOptionsTest.php</file>
+            <file>Unit/HookDisplayOrderConfirmationTest.php</file>
+            <file>Unit/InstallTest.php</file>
+            <file>Unit/InstallOrderStateTest.php</file>
+            <file>Unit/ValidationControllerTest.php</file>
+            <file>Unit/UpgradeModuleTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
