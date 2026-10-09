@@ -31,10 +31,10 @@ $DOCKER pull "$IMAGE"
 php_docker() {
   $DOCKER run --rm --network none \
     -v "$ROOT":/src -v "$PHAR":/tmp/phpunit.phar:ro -w /src/tests \
-    "$IMAGE" php /tmp/phpunit.phar "$@"
+    "$IMAGE" php -d error_reporting=E_ALL /tmp/phpunit.phar "$@"
 }
 
-$DOCKER run --rm --network none -v "$ROOT":/src -w /src "$IMAGE" php /src/tests/bin/generate-shuffle-config.php
+$DOCKER run --rm --network none -v "$ROOT":/src -w /src "$IMAGE" php -d error_reporting=E_ALL /src/tests/bin/generate-shuffle-config.php
 
 RUN_LOG="/opt/cursor/artifacts/phpunit-runs.log"
 mkdir -p /opt/cursor/artifacts

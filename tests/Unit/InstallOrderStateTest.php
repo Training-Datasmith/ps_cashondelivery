@@ -131,7 +131,8 @@ class InstallOrderStateTest extends PsCodTestCase
 
         $module = $this->createModule();
         $this->assertFalse($module->installOrderState());
-        $this->assertContains('Failed to save OrderState PS_OS_COD_VALIDATION to Configuration', $module->_errors);
+        $this->assertGreaterThan(0, OrderState::$addCallCount);
+        $this->assertArrayNotHasKey('PS_OS_COD_VALIDATION', Configuration::$data);
         $this->assertSame(0, count(glob(_PS_ORDER_STATE_IMG_DIR_ . '*.gif')));
     }
 
