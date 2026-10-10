@@ -28,6 +28,7 @@ abstract class PsCodTestCase extends PHPUnit_Framework_TestCase
         parent::setUp();
         Context::reset();
         Configuration::reset();
+        Cart::reset();
         OrderState::reset();
         Currency::reset();
         Customer::reset();

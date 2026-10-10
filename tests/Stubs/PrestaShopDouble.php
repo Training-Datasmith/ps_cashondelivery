@@ -103,6 +103,9 @@ class Configuration
     /** @var bool */
     public static $updateGlobalValueResult = true;
 
+    /** @var array<int, array<string, mixed>> */
+    public static $updateGlobalValueCalls = array();
+
     /**
      * @param string $key
      *
@@ -131,6 +134,11 @@ class Configuration
      */
     public static function updateGlobalValue($key, $value)
     {
+        self::$updateGlobalValueCalls[] = array(
+            'key' => $key,
+            'value' => $value,
+        );
+
         if (false === self::$updateGlobalValueResult) {
             return false;
         }
@@ -144,6 +152,7 @@ class Configuration
     {
         self::$data = array();
         self::$updateGlobalValueResult = true;
+        self::$updateGlobalValueCalls = array();
     }
 }
 
@@ -185,7 +194,7 @@ class Currency
     public function __construct($id)
     {
         $this->id = (int) $id;
-        $this->iso_code = isset(self::$isoById[$this->id]) ? self::$isoById[$this->id] : 'EUR';
+        $this->iso_code = isset(self::$isoById[$this->id]) ? self::$isoById[$this->id] : '';
     }
 
     public static function reset()
@@ -364,6 +373,9 @@ class Cart
 {
     const BOTH = 3;
 
+    /** @var array<int, array<string, mixed>> */
+    public static $getOrderTotalCalls = array();
+
     /** @var int */
     public $id;
 
@@ -403,7 +415,17 @@ class Cart
      */
     public function getOrderTotal($withTaxes, $type)
     {
+        self::$getOrderTotalCalls[] = array(
+            'withTaxes' => $withTaxes,
+            'type' => $type,
+        );
+
         return 20.5;
+    }
+
+    public static function reset()
+    {
+        self::$getOrderTotalCalls = array();
     }
 }
 
@@ -550,12 +572,15 @@ class OrderState
      */
     public function __construct($id = 0)
     {
-        $this->id = (int) $id;
-        if ($this->id > 0 && isset(self::$instances[$this->id])) {
-            $stored = self::$instances[$this->id];
+        $id = (int) $id;
+        if ($id > 0 && isset(self::$instances[$id])) {
+            $this->id = $id;
+            $stored = self::$instances[$id];
             foreach (get_object_vars($stored) as $key => $value) {
                 $this->$key = $value;
             }
+        } else {
+            $this->id = 0;
         }
     }
 

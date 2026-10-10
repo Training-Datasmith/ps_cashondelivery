@@ -129,6 +129,12 @@ class ValidationControllerTest extends PsCodTestCase
             $this->assertContains('"step":1', $redirect->url);
         }
 
+        $this->assertNotEmpty(Link::$pageLinkCalls);
+        $pageLink = Link::$pageLinkCalls[count(Link::$pageLinkCalls) - 1];
+        $this->assertSame('order', $pageLink['controller']);
+        $this->assertTrue($pageLink['ssl']);
+        $this->assertSame(2, $pageLink['idLang']);
+
         $this->assertSame(0, count(PaymentModule::$validateOrderCalls));
     }
 
@@ -142,6 +148,11 @@ class ValidationControllerTest extends PsCodTestCase
         } catch (PsCodTestRedirect $redirect) {
             $this->assertContains('PAGE:order:', $redirect->url);
         }
+
+        $pageLink = Link::$pageLinkCalls[count(Link::$pageLinkCalls) - 1];
+        $this->assertSame('order', $pageLink['controller']);
+        $this->assertTrue($pageLink['ssl']);
+        $this->assertSame(2, $pageLink['idLang']);
 
         $this->assertSame(0, count(PaymentModule::$validateOrderCalls));
     }
@@ -158,6 +169,11 @@ class ValidationControllerTest extends PsCodTestCase
             $this->assertContains('PAGE:order:', $redirect->url);
         }
 
+        $pageLink = Link::$pageLinkCalls[count(Link::$pageLinkCalls) - 1];
+        $this->assertSame('order', $pageLink['controller']);
+        $this->assertTrue($pageLink['ssl']);
+        $this->assertSame(2, $pageLink['idLang']);
+
         $this->assertSame(0, count(PaymentModule::$validateOrderCalls));
     }
 
@@ -173,6 +189,15 @@ class ValidationControllerTest extends PsCodTestCase
             $this->assertContains('"id_order":77', $redirect->url);
             $this->assertContains('"key":"abcdef0123456789"', $redirect->url);
         }
+
+        $pageLink = Link::$pageLinkCalls[count(Link::$pageLinkCalls) - 1];
+        $this->assertSame('order-confirmation', $pageLink['controller']);
+        $this->assertTrue($pageLink['ssl']);
+        $this->assertSame(2, $pageLink['idLang']);
+
+        $this->assertCount(1, Cart::$getOrderTotalCalls);
+        $this->assertTrue(Cart::$getOrderTotalCalls[0]['withTaxes']);
+        $this->assertSame(Cart::BOTH, Cart::$getOrderTotalCalls[0]['type']);
 
         $this->assertCount(1, PaymentModule::$validateOrderCalls);
         $call = PaymentModule::$validateOrderCalls[0];

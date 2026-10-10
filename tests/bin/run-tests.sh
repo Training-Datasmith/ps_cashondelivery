@@ -36,8 +36,8 @@ php_docker() {
 
 $DOCKER run --rm --network none -v "$ROOT":/src -w /src "$IMAGE" php -d error_reporting=E_ALL /src/tests/bin/generate-shuffle-config.php
 
-RUN_LOG="/opt/cursor/artifacts/phpunit-runs.log"
-mkdir -p /opt/cursor/artifacts
+RUN_LOG="${RUN_LOG:-${TMPDIR:-/tmp}/ps_cashondelivery-phpunit-runs.log}"
+mkdir -p "$(dirname "$RUN_LOG")"
 : > "$RUN_LOG"
 
 run_once() {

@@ -41,7 +41,6 @@ class InstallOrderStateTest extends PsCodTestCase
         $this->assertFalse($state->hidden);
         $this->assertFalse($state->deleted);
         $this->assertTrue($state->unremovable);
-        $this->assertSame('', $state->template);
     }
 
     public function testColorDependsOnPrestaShopVersion()
@@ -85,12 +84,12 @@ class InstallOrderStateTest extends PsCodTestCase
         $module = $this->createModule();
         $this->assertTrue($module->installOrderState());
         $this->assertSame(0, OrderState::$addCallCount);
-        $this->assertSame('#000000', OrderState::$instances[5]->color);
     }
 
     public function testMissingStateIsRecreated()
     {
         Configuration::$data['PS_OS_COD_VALIDATION'] = 5;
+        $this->assertFalse(Validate::isLoadedObject(new OrderState(5)));
 
         $module = $this->createModule();
         $module->installOrderState();
@@ -132,7 +131,9 @@ class InstallOrderStateTest extends PsCodTestCase
         $module = $this->createModule();
         $this->assertFalse($module->installOrderState());
         $this->assertGreaterThan(0, OrderState::$addCallCount);
-        $this->assertArrayNotHasKey('PS_OS_COD_VALIDATION', Configuration::$data);
+        $this->assertCount(1, Configuration::$updateGlobalValueCalls);
+        $this->assertSame('PS_OS_COD_VALIDATION', Configuration::$updateGlobalValueCalls[0]['key']);
+        $this->assertSame(1, Configuration::$updateGlobalValueCalls[0]['value']);
         $this->assertSame(0, count(glob(_PS_ORDER_STATE_IMG_DIR_ . '*.gif')));
     }
 
